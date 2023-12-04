@@ -1,0 +1,479 @@
+{
+  "openapi": "3.0.0",
+  "components": {
+    "schemas": {
+      "Client": {
+        "properties": {
+          "phoneNumber": {
+            "type": "integer"
+          },
+          "phoneOperator": {
+            "type": "integer"
+          },
+          "tag": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Mailing": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "filter": {
+            "type": "object",
+            "properties": {
+              "phoneOperator": {
+                "type": "integer"
+              },
+              "tag": {
+                "type": "string"
+              },
+              "timeZone": {
+                "type": "string"
+              }
+            }
+          },
+          "startTime": {
+            "type": "string",
+            "example": "dd-mm-yyyy hh:mm"
+          },
+          "endTime": {
+            "type": "string",
+            "example": "dd-mm-yyyy hh:mm"
+          }
+        }
+      },
+      "CommonStatisticSingle": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000000"
+          },
+          "matches": {
+            "type": "integer"
+          },
+          "sent": {
+            "type": "integer"
+          },
+          "fails": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "string",
+            "example": "RFC3339"
+          },
+          "timeExecuting": {
+            "type": "string"
+          }
+        }
+      },
+      "CommonStatistic": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/CommonStatisticSingle"
+        }
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "timeStamp": {
+            "type": "string"
+          },
+          "mailingID": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000000"
+          },
+          "clientID": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "Messages": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Message"
+        }
+      },
+      "DetailedStatisticSingle": {
+        "type": "object",
+        "properties": {
+          "commonStatistic": {
+            "$ref": "#/components/schemas/CommonStatisticSingle"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/Mailing"
+          },
+          "messages": {
+            "$ref": "#/components/schemas/Messages"
+          }
+        }
+      },
+      "DetailedStatistic": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/DetailedStatisticSingle"
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "info": {
+    "description": "API for mailing service",
+    "title": "Mailing Service",
+    "version": "1.0"
+  },
+  "tags": [
+    {
+      "name": "client",
+      "description": "Operations on clients"
+    },
+    {
+      "name": "mailing",
+      "description": "Operations on mailings"
+    },
+    {
+      "name": "other"
+    }
+  ],
+  "paths": {
+    "/clients": {
+      "get": {
+        "tags": [
+          "client"
+        ],
+        "summary": "Get all clients",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "client"
+        ],
+        "summary": "Add new client",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Client"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/clients/{id}": {
+      "put": {
+        "tags": [
+          "client"
+        ],
+        "summary": "Change existing client",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Client"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "client"
+        ],
+        "summary": "Delete existing client",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/mailings": {
+      "get": {
+        "tags": [
+          "mailing"
+        ],
+        "summary": "Get all mailings",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "mailing"
+        ],
+        "summary": "Add new mailing",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Mailing"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/mailings/{uuid}": {
+      "put": {
+        "tags": [
+          "mailing"
+        ],
+        "summary": "Change existing mailing",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Mailing"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "mailing"
+        ],
+        "summary": "Delete existing mailing",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/mailings/statistic": {
+      "get": {
+        "tags": [
+          "mailing"
+        ],
+        "summary": "Retrive common statistic for all mailings",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonStatistic"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/mailings/statistic/{uuid}": {
+      "get": {
+        "tags": [
+          "mailing"
+        ],
+        "summary": "Retrive detailed statistic for mailing",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetailedStatistic"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/send/{clientID}": {
+      "post": {
+        "tags": [
+          "other"
+        ],
+        "summary": "Send message directly to person",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "clientID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "example": "some text"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  }
+}

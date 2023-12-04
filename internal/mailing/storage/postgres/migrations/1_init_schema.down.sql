@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS message;
+DROP TABLE IF EXISTS client;
+DROP TABLE IF EXISTS mailing_filter;
+DROP TABLE IF EXISTS mailing_stats;
+DROP TABLE IF EXISTS mailing;
